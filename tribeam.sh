@@ -26,13 +26,13 @@ elif [[ $ID = "debian" ]]; then
       yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip
 
 elif [[ $ID = "fedora" ]]; then
-    yes | dnf install unzip;yes | dnf install wget;yes | dnf install python3-pip
+    yes | dnf install unzip;yes | dnf install wget;yes | dnf install python3
 
 elif [[ $ID = "arch" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python3-pip
+  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip
 
 elif [[ $ID = "manjaro" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python3-pip
+  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip
 
 else
   echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
