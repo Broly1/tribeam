@@ -39,6 +39,8 @@ else
   exit 1
 fi
 
+chmod 755 -R tools
+
 # tribeam.sh fork of jumpstart.sh: Fetches BaseSystem and converts it to a viable format.
 # by Foxlet <foxlet@furcode.co>
 
