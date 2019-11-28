@@ -87,13 +87,17 @@ esac
 
 set -e
 func1 (){
-  if
-  wget https://files.amd-osx.com/OpenCore-0.5.2-RELEASE.zip
-  then
-    unzip OpenCore-0.5.2-RELEASE.zip -d /mnt/
-  else
-    echo -e "${RED}Something went wrong!!!${NOCOLOR}"
-  fi
+if
+curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
+| grep -i browser_download_url \
+| grep RELEASE.zip \
+| cut -d'"' -f4 \
+| wget -qi -
+then
+unzip *RELEASE.zip -d /mnt/
+else
+exit 1
+fi
   sleep 5s
   chmod +x /mnt/
   rm -rf OpenCore-0.5.2-RELEASE.zip
