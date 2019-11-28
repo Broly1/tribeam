@@ -16,23 +16,23 @@ fi
 source /etc/os-release
 
 if [[ $ID = "ubuntu" ]]; then
-  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip
+  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
 
 
 elif [[ $ID = "linuxmint" ]]; then
-  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip
+  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
 
 elif [[ $ID = "debian" ]]; then
-      yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip
+  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
 
 elif [[ $ID = "fedora" ]]; then
-    yes | dnf install unzip;yes | dnf install wget;yes | dnf install python3
+    yes | dnf install unzip;yes | dnf install wget;yes | dnf install python3;yes | dnf install curl
 
 elif [[ $ID = "arch" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip
+  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip;yes | pacman -S curl
 
 elif [[ $ID = "manjaro" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip
+  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip;yes | pacman -S curl
 
 else
   echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
