@@ -100,7 +100,7 @@ exit 1
 fi
   sleep 5s
   chmod +x /mnt/
-  rm -rf OpenCore-0.5.2-RELEASE.zip
+  rm -rf *RELEASE.zip
   rm -rf "$PWD/base.iso"
   rm -rf tools/FetchMacOS/BaseSystem/
   umount $(echo /dev/$id)2
