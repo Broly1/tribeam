@@ -1,12 +1,5 @@
-# Tribeam Fork of macOS-Simple-KVM
-Made by [@FoxletFox](https://twitter.com/foxletfox), and the help of many others. You can donate to him [on Coinbase](https://commerce.coinbase.com/checkout/96dc5777-0abf-437d-a9b5-a78ae2c4c227) or [Paypal!](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QFXXKKAB2B9MA&item_name=macOS-Simple-KVM).
 
- Modfied by me to create an OpenCore USB-installer under linux.
-
-
-
-
-## Getting Started
+# Getting Started
 You'll need Ubuntu, Arch, Fedora, LinuxMint, Debian, or Manjaro system anything else is not supported for now.
 
 ## Step 1
@@ -32,4 +25,11 @@ be carefull not to select your ssd as it would wipe it clean.
 Wait for the instalation to finish, open /mnt and edit your config.plist with ProperTree,
 https://github.com/corpnewt/ProperTree
 done.
+
+Tribeam is Fork of macOS-Simple-KVM
+Made by [@FoxletFox](https://twitter.com/foxletfox), and the help of many others. You can donate to him [on Coinbase](https://commerce.coinbase.com/checkout/96dc5777-0abf-437d-a9b5-a78ae2c4c227) or [Paypal!](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QFXXKKAB2B9MA&item_name=macOS-Simple-KVM).
+
+ Modfied by me to create OpenCore USB-installers on Linux.
+
+
 
