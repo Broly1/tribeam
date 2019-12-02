@@ -1,6 +1,9 @@
-
-# Getting Started
-You'll need Ubuntu, Arch, Fedora, LinuxMint, Debian, or Manjaro system anything else is not supported for now.
+# Welcome  
+This script will create a hackintosh USB-installer with the latest github release of OpenCore bootloader,  
+it uses the Basesystem.dmg of the macOS app which is a net-installer and download the  
+necessary packages during installation there for you need internet connection to use it.    
+## Getting Started
+You'll need Ubuntu, Arch, Fedora, LinuxMint, Debian, or Manjaro, any other distros aren't supported for now.
 
 ## Step 1
 Plug in your USB-drive 4GB or more. 
