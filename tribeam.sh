@@ -67,7 +67,7 @@ case $argument in
         print_usage
         ;;
     -s|--high-sierra)
-        "$TOOLS/FetchMacOS/fetch.sh" -v 10.13 || exit 1;
+        "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13 || exit 1;
         ;;
     -m|--mojave)
         "$TOOLS/FetchMacOS/fetch.sh" -v 10.14 || exit 1;
