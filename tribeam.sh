@@ -3,101 +3,103 @@
 RED="\033[1;31m"
 NOCOLOR="\033[0m"
 YELLOW="\033[01;33m"
-
-
-
+TOOLS=$PWD/tools
+package="unzip wget curl"
+piparch="python-pip"
 # Checking for root
 if [[ $EUID -ne 0 ]]; then
-  echo -e "${RED}THIS SCRIPT MUST RUN AS ROOT${NOCOLOR}"
+  echo -e "${RED}THIS SCRIPT MUST BE EXECUTED AS ROOT${NOCOLOR}"
   exit 1
 fi
+set -e
+declare -A osInfo;
+osInfo[/etc/debian_version]="apt install -y"
+osInfo[/etc/alpine-release]="apk --update add"
+osInfo[/etc/centos-release]="yum install -y"
+osInfo[/etc/fedora-release]="dnf install -y"
+osInfo[/etc/arch-release]="pacman -S --noconfirm"
 
-# Identifying distro
-source /etc/os-release
+for f in ${!osInfo[@]}
+do
+  if [[ -f $f ]];then
+    package_manager=${osInfo[$f]}
+  fi
+done
 
-if [[ $ID = "ubuntu" ]]; then
-  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
-
-
-elif [[ $ID = "linuxmint" ]]; then
-  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
-
-elif [[ $ID = "debian" ]]; then
-  yes | apt install unzip;yes | apt install wget;yes | apt install python3-pip;yes | apt install curl
-
-elif [[ $ID = "fedora" ]]; then
-    yes | dnf install unzip;yes | dnf install wget;yes | dnf install python3;yes | dnf install curl
-
-elif [[ $ID = "arch" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip;yes | pacman -S curl
-
-elif [[ $ID = "manjaro" ]]; then
-  yes | pacman -S unzip;yes | pacman -S wget;yes | pacman -S python-pip;yes | pacman -S curl
-
+if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
+  ${package_manager} ${package} ${piparch} > /dev/null 2>&1
+elif [ "${package_manager}" = "apt install -y" ]; then
+  ${package_manager} ${package} python3-pip > /dev/null 2>&1
+elif [ "${package_manager}" = "yum install -y" ]; then
+  ${package_manager} ${package} python3-pip > /dev/null 2>&1
+elif [ "${package_manager}" = "dnf install -y" ]; then
+  ${package_manager} ${package} python3-pip > /dev/null 2>&1
+elif [ "${package_manager}" = "apk --update add" ]; then
+  ${package_manager} ${package} python3-pip > /dev/null 2>&1
 else
   echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
   exit 1
 fi
 
 chmod 755 -R tools
-
-# tribeam.sh fork of jumpstart.sh: Fetches BaseSystem and converts it to a viable format.
-# by Foxlet <foxlet@furcode.co>
-
-TOOLS=$PWD/tools
-
-print_usage() {
-    echo
-    echo "Usage: $0"
-    echo
-    echo " -s, --high-sierra   Fetch High Sierra media."
-    echo " -m, --mojave        Fetch Mojave media."
-    echo " -c, --catalina      Fetch Catalina media."
-    echo
+banner() {
+  msg="# $* #"
+  edge=$(echo "$msg" | sed 's/./#/g')
+  echo "$edge"
+  echo "$msg"
+  echo "$edge"
 }
+banner "WELCOME TO TRIBEAM!!"
+echo -e "${YELLOW}Please Select Product!!${NOCOLOR}"
+options+=("macOS_Catalina" "macOS_Mojave" "macOS_High_Sierra")
+options+=("Quit")
 
-error() {
-    local error_message="$*"
-    echo "${error_message}" 1>&2;
-}
 
-argument="$1"
-case $argument in
-    -h|--help)
-        print_usage
-        ;;
-    -s|--high-sierra)
-        "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13 || exit 1;
-        ;;
-    -m|--mojave)
-        "$TOOLS/FetchMacOS/fetch.sh" -v 10.14 || exit 1;
-        ;;
-    -c|--catalina|*)
-        "$TOOLS/FetchMacOS/fetch.sh" -v 10.15 || exit 1;
-        ;;
-esac
+select name in "${options[@]}"
+do
+  if [[ "$name" ]]; then
+    echo -e "\e[3mYou selected $name\e[0m"
+  else
+    echo -e "\e[0mYou typed in: $REPLY$\e[0m"
+    name=$REPLY
+  fi
 
+  case "$name" in
+    macOS_Catalina) echo -e "\e[3mDownloading macOS Catalina ...\e[0m"
+    "$TOOLS/FetchMacOS/fetch.sh" -v 10.15
+    break
+    ;;
+    macOS_Mojave) echo -e "\e[3mDownloading macOS Mojave ...\e[0m"
+    "$TOOLS/FetchMacOS/fetch.sh" -v 10.14
+    break
+    ;;
+    macOS_High_Sierra) echo -e "\e[3mDownloading macOS High Sierra ...\e[0m"
+    "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13
+    break
+    ;;
+    Quit)
+    exit 1
+    ;;
+    *)
+    echo -e "${YELLOW}>>> Invalid Selection, Try again!${NOCOLOR}"
+
+    ;;
+  esac
+done
 "$TOOLS/dmg2img" "$TOOLS/FetchMacOS/BaseSystem/BaseSystem.dmg" "$PWD/base.iso"
 
-# Autor: Broly
-# License: GNU General Public License v3.0
-# https://www.gnu.org/licenses/gpl-3.0.txt
-# This script is inteded to create a OpenCore usb installer on linux.
-
-
-set -e
 func1 (){
-if
-curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
-| grep -i browser_download_url \
-| grep RELEASE.zip \
-| cut -d'"' -f4 \
-| wget -qi -
-then
-unzip *RELEASE.zip -d /mnt/
-else
-exit 1
-fi
+  if
+  curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
+  | grep -i browser_download_url \
+  | grep RELEASE.zip \
+  | cut -d'"' -f4 \
+  | wget -qi -
+  then
+    unzip *RELEASE.zip -d /mnt/
+  else
+    exit 1
+  fi
   sleep 5s
   chmod +x /mnt/
   rm -rf *RELEASE.zip
@@ -135,22 +137,22 @@ else
 fi
 
 #partitioning
-  (
-    echo "x"
-    echo "e"
-    echo "w"
-    echo "y") | gdisk /dev/$id
-  (
-    echo "n"
-    echo "2"
-    echo ""
-    echo ""
-    echo "t"
-    echo "2"
-    echo "1"
-    sleep 3s
-    echo "w") | fdisk /dev/$id
-    sleep 3s
+(
+echo "x"
+echo "e"
+echo "w"
+echo "y") | gdisk /dev/$id
+(
+echo "n"
+echo "2"
+echo ""
+echo ""
+echo "t"
+echo "2"
+echo "1"
+sleep 3s
+echo "w") | fdisk /dev/$id
+sleep 3s
 
 # Format the EFI partition for clover or opencore
 # and mount it in the /mnt
