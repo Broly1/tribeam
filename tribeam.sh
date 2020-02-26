@@ -25,6 +25,7 @@ do
     package_manager=${osInfo[$f]}
   fi
 done
+  echo -e "\e[3mInstalling Depencencies...\e[0m"
 
 if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
   ${package_manager} ${package} ${piparch} > /dev/null 2>&1
@@ -65,15 +66,15 @@ do
   fi
 
   case "$name" in
-    macOS_Catalina) echo -e "\e[3mDownloading macOS Catalina ...\e[0m"
+    macOS_Catalina) echo -e "\e[3mDownloading macOS Catalina BaseSystem.dmg ...\e[0m"
     "$TOOLS/FetchMacOS/fetch.sh" -v 10.15
     break
     ;;
-    macOS_Mojave) echo -e "\e[3mDownloading macOS Mojave ...\e[0m"
+    macOS_Mojave) echo -e "\e[3mDownloading macOS Mojave BaseSystem.dmg ...\e[0m"
     "$TOOLS/FetchMacOS/fetch.sh" -v 10.14
     break
     ;;
-    macOS_High_Sierra) echo -e "\e[3mDownloading macOS High Sierra ...\e[0m"
+    macOS_High_Sierra) echo -e "\e[3mDownloading macOS High Sierra BaseSystem.dmg ...\e[0m"
     "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13
     break
     ;;
