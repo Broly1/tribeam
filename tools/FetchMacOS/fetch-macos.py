@@ -35,7 +35,7 @@ class Filesystem:
         remote = requests.get(url, stream=True, headers=ClientMeta.osinstall)
 
         with open(filename, 'wb') as f:
-            with click.progressbar(remote.iter_content(1024), length=size/1024, label="Fetching {} ...".format(filename)) as stream:
+            with click.progressbar(remote.iter_content(1024), length=size/1024, label="{}".format(label)) as stream:
                 for data in stream:
                     f.write(data)
         return filename
