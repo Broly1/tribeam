@@ -4,9 +4,6 @@ RED="\033[1;31m"
 NOCOLOR="\033[0m"
 YELLOW="\033[01;33m"
 TOOLS=$PWD/tools
-package="unzip wget curl"
-piparch="python-pip"
-pipfedora="python3"
 # Checking for root
 if [[ $EUID -ne 0 ]]; then
   echo -e "${RED}THIS SCRIPT MUST BE EXECUTED AS ROOT${NOCOLOR}"
@@ -27,21 +24,22 @@ do
   fi
 done
   echo -e "\e[3mInstalling Depencencies...\e[0m"
+  package="unzip wget curl"
 
 if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
-  ${package_manager} ${package} ${piparch} 
+  ${package_manager} ${package}  
 
 elif [ "${package_manager}" = "apt install -y" ]; then
-  ${package_manager} ${package} python3-pip 
+  ${package_manager} ${package}  
 
 elif [ "${package_manager}" = "yum install -y" ]; then
-  ${package_manager} ${package} python3-pip 
+  ${package_manager} ${package} 
 
 elif [ "${package_manager}" = "dnf install -y" ]; then
-  ${package_manager} ${package} ${pipfedora}
+  ${package_manager} ${package} 
  
 elif [ "${package_manager}" = "apk --update add" ]; then
-  ${package_manager} ${package} python3-pip 
+  ${package_manager} ${package} 
 else
   echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
   exit 1
