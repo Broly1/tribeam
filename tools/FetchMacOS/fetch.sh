@@ -41,6 +41,16 @@ getpython(){
     fi
 }
 
+getpip > /dev/null 2>&1
+getpython 
+$PYTHONBIN fetch-macos.py "$@"
+
+exit;
+        echo "Please install Python 3 before continuing." >&2
+        exit 1;
+    fi
+}
+
 getpip
 getpython
 $PYTHONBIN fetch-macos.py "$@"
