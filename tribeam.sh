@@ -135,7 +135,7 @@ read -r id sn unused <<<"$choice"
 
 echo -e "\e[3mCopying base.iso to usb-drive!\e[0m"
 if
-dd bs=4M if="$PWD/base.iso" of=/dev/$id status=progress oflag=sync
+dd bs=4M conv=sparse if="$PWD/base.iso" of=/dev/$id status=progress oflag=sync
 then
   umount $(echo /dev/$id?*)  || :; sleep 3s
 else
