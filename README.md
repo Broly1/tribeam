@@ -3,15 +3,20 @@ This script will create a hackintosh USB-installer with the latest github releas
 it uses the Basesystem.dmg of the macOS app which is a net-installer and download the  
 necessary packages during installation there for you need internet connection to use it.    
 ## Getting Started
-You'll need Ubuntu, Arch, Fedora, LinuxMint, Debian, or Manjaro, any other distros aren't supported for now.
+You'll need Ubuntu, Arch, Fedora , or Debian based distros for it to work any other distro aren't supported for now.
 
 ## Step 1
 Plug in your USB-drive 4GB or more. 
 
 ## Step 2
-Run `tribeam.sh` to download installation media for macOS (internet required). The default installation uses Catalina, but you can choose which version to get by adding either `--high-sierra`, `--mojave`, or `--catalina`. For example:
-
-`./tribeam.sh --mojave`
+Run `tribeam.sh` to download installation media for macOS (internet required). 
+Select the macOS version desired:
+```
+1) macOS_Catalina
+2) macOS_Mojave
+2) macOS_High_Sierra
+#)?
+```
 
 ## Step 3
 Select the USB-drive whenever the script asks, it will show a menu with all drives For example:
