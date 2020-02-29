@@ -25,21 +25,21 @@ do
 done
   echo -e "\e[3mInstalling Depencencies...\e[0m"
   package="unzip wget curl"
+  package1="unzip wget curl python-pip"
+  package2="unzip wget curl python3-pip"
 
 if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
-  ${package_manager} ${package}  
+  ${package_manager} ${package1}  
 
 elif [ "${package_manager}" = "apt install -y" ]; then
-  ${package_manager} ${package}  
+  ${package_manager} ${package2}  
 
 elif [ "${package_manager}" = "yum install -y" ]; then
-  ${package_manager} ${package} 
+  ${package_manager} ${package1} 
 
 elif [ "${package_manager}" = "dnf install -y" ]; then
   ${package_manager} ${package} 
  
-elif [ "${package_manager}" = "apk --update add" ]; then
-  ${package_manager} ${package} 
 else
   echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
   exit 1
