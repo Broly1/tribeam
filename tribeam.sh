@@ -144,7 +144,8 @@ fi
 
 #partitioning
 
-sgdisk /dev/$id -n 2 -t 2:ef00
+sgdisk -e /dev/$id --new=2:0:+300MiB -t 2:ef00
+
 
 # Format the EFI partition for clover or opencore
 # and mount it in the /mnt
