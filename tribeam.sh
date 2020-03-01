@@ -6,8 +6,8 @@ YELLOW="\033[01;33m\e[3m"
 TOOLS=$PWD/tools
 # Checking for root
 if [[ $EUID -ne 0 ]]; then
-  echo -e "${RED}THIS SCRIPT MUST BE EXECUTED AS ROOT${NOCOLOR}"
-  exit 1
+    echo -e "${RED}THIS SCRIPT MUST BE EXECUTED AS ROOT${NOCOLOR}"
+    exit 1
 fi
 set -e
 declare -A osInfo;
@@ -19,40 +19,40 @@ osInfo[/etc/arch-release]="pacman -S --noconfirm"
 
 for f in ${!osInfo[@]}
 do
-  if [[ -f $f ]];then
-    package_manager=${osInfo[$f]}
-  fi
+    if [[ -f $f ]];then
+        package_manager=${osInfo[$f]}
+    fi
 done
-  echo -e "\e[3mInstalling Depencencies...\e[0m"
-  package="unzip wget curl"
-  package1="unzip wget curl python-pip"
-  package2="unzip wget curl python3-pip"
+echo -e "\e[3mInstalling Depencencies...\e[0m"
+package="unzip wget curl"
+package1="unzip wget curl python-pip"
+package2="unzip wget curl python3-pip"
 
 if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
-  ${package_manager} ${package1}  
-
-elif [ "${package_manager}" = "apt install -y" ]; then
-  ${package_manager} ${package2}  
-
-elif [ "${package_manager}" = "yum install -y" ]; then
-  ${package_manager} ${package1} 
-
-elif [ "${package_manager}" = "dnf install -y" ]; then
-  ${package_manager} ${package} 
- 
+    ${package_manager} ${package1}
+    
+    elif [ "${package_manager}" = "apt install -y" ]; then
+    ${package_manager} ${package2}
+    
+    elif [ "${package_manager}" = "yum install -y" ]; then
+    ${package_manager} ${package1}
+    
+    elif [ "${package_manager}" = "dnf install -y" ]; then
+    ${package_manager} ${package}
+    
 else
-  echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
-  exit 1
+    echo -e "${RED}YOUR DISTRO IS NOT SUPPORTED!!${NOCOLOR}"
+    exit 1
 fi
 
 chmod 755 -R tools
 
 banner() {
-  msg="# $* #"
-  edge=$(echo "$msg" | sed 's/./#/g')
-  echo "$edge"
-  echo "$msg"
-  echo "$edge"
+    msg="# $* #"
+    edge=$(echo "$msg" | sed 's/./#/g')
+    echo "$edge"
+    echo "$msg"
+    echo "$edge"
 }
 banner "WELCOME TO TRIBEAM!!"
 
@@ -63,57 +63,57 @@ options+=("Quit")
 
 select name in "${options[@]}"
 do
-  if [[ "$name" ]]; then
-    echo -e "\e[3mYou selected $name\e[0m"
-  else
-    echo -e "\e[0mYou typed in: $REPLY$\e[0m"
-    name=$REPLY
-  fi
-
-  case "$name" in
-    macOS_Catalina) echo -e "\e[3mDownloading macOS Catalina BaseSystem.dmg ...\e[0m"
-    "$TOOLS/FetchMacOS/fetch.sh" -v 10.15
-    break
-    ;;
-    macOS_Mojave) echo -e "\e[3mDownloading macOS Mojave BaseSystem.dmg ...\e[0m"
-    "$TOOLS/FetchMacOS/fetch.sh" -v 10.14
-    break
-    ;;
-    macOS_High_Sierra) echo -e "\e[3mDownloading macOS High Sierra BaseSystem.dmg ...\e[0m"
-    "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13
-    break
-    ;;
-    Quit)
-    exit 1
-    ;;
-    *)
-    echo -e "${YELLOW}>>> Invalid Selection, Try again!${NOCOLOR}"
-
-    ;;
-  esac
+    if [[ "$name" ]]; then
+        echo -e "\e[3mYou selected $name\e[0m"
+    else
+        echo -e "\e[0mYou typed in: $REPLY$\e[0m"
+        name=$REPLY
+    fi
+    
+    case "$name" in
+        macOS_Catalina) echo -e "\e[3mDownloading macOS Catalina BaseSystem.dmg ...\e[0m"
+            "$TOOLS/FetchMacOS/fetch.sh" -v 10.15
+            break
+        ;;
+        macOS_Mojave) echo -e "\e[3mDownloading macOS Mojave BaseSystem.dmg ...\e[0m"
+            "$TOOLS/FetchMacOS/fetch.sh" -v 10.14
+            break
+        ;;
+        macOS_High_Sierra) echo -e "\e[3mDownloading macOS High Sierra BaseSystem.dmg ...\e[0m"
+            "$TOOLS/FetchMacOS/fetch.sh" -p 041-91758 -v 10.13
+            break
+        ;;
+        Quit)
+            exit 1
+        ;;
+        *)
+            echo -e "${YELLOW}>>> Invalid Selection, Try again!${NOCOLOR}"
+            
+        ;;
+    esac
 done
 "$TOOLS/dmg2img" "$TOOLS/FetchMacOS/BaseSystem/BaseSystem.dmg" "$PWD/base.iso"
 
 func1 (){
-  if
-  curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
-  | grep -i browser_download_url \
-  | grep RELEASE.zip \
-  | cut -d'"' -f4 \
-  | wget -qi -
-  then
-    unzip *RELEASE.zip -d /mnt/
-  else
-    exit 1
-  fi
-  sleep 5s
-  chmod +x /mnt/
-  rm -rf *RELEASE.zip
-  rm -rf "$PWD/base.iso"
-  rm -rf tools/FetchMacOS/BaseSystem/
-  umount $(echo /dev/$id)2
-  mount -t vfat  $(echo /dev/$id)2 /mnt/ -o rw,umask=000
-  sleep 3s
+    if
+    curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
+    | grep -i browser_download_url \
+    | grep RELEASE.zip \
+    | cut -d'"' -f4 \
+    | wget -qi -
+    then
+        unzip *RELEASE.zip -d /mnt/
+    else
+        exit 1
+    fi
+    sleep 5s
+    chmod +x /mnt/
+    rm -rf *RELEASE.zip
+    rm -rf "$PWD/base.iso"
+    rm -rf tools/FetchMacOS/BaseSystem/
+    umount $(echo /dev/$id)2
+    mount -t vfat  $(echo /dev/$id)2 /mnt/ -o rw,umask=000
+    sleep 3s
 }
 
 # Print disk devices
@@ -126,8 +126,8 @@ readarray -t lines < <(lsblk --nodeps -no name,size | grep "sd")
 echo -e "${RED}WARNING!!! SELECTING THE WRONG DISK MAY WIPE YOUR PC AND ALL DATA!!!${NOCOLOR}"
 echo -e "${YELLOW}Please select the usb-drive!!${NOCOLOR}"
 select choice in "${lines[@]}"; do
-  [[ -n $choice ]] || { echo -e "${RED}>>> Invalid Selection !${NOCOLOR}" >&2; continue; }
-  break # valid choice was made; exit prompt.
+    [[ -n $choice ]] || { echo -e "${RED}>>> Invalid Selection !${NOCOLOR}" >&2; continue; }
+    break # valid choice was made; exit prompt.
 done
 
 # Split the chosen line into ID and serial number.
