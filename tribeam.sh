@@ -150,7 +150,7 @@ sgdisk -e /dev/$id --new=2:0:+300MiB -t 2:ef00
 # Format the EFI partition for clover or opencore
 # and mount it in the /mnt
 if
-mkfs.fat -F 32 -n EFI $(echo /dev/$id)2
+mkfs.fat -F32 -n EFI $(echo /dev/$id)2
 then
   mount -t vfat  $(echo /dev/$id)2 /mnt/ -o rw,umask=000; sleep 3s
 else
