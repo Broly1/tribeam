@@ -133,14 +133,25 @@ done
 # Split the chosen line into ID and serial number.
 read -r id sn unused <<<"$choice"
 
+dding(){
 echo -e "\e[3mCopying base.iso to usb-drive!\e[0m"
 if
-dd bs=4M conv=sparse if="$PWD/base.iso" of=/dev/$id status=progress oflag=sync
+dd bs=8M conv=sparse if="$PWD/base.iso" of=/dev/$id status=progress oflag=sync
 then
   umount $(echo /dev/$id?*)  || :; sleep 3s
 else
   exit 1
 fi
+}
+
+while true; do
+    read -p "$(echo -e ${YELLOW}"Driver ($id) will be erased, do you wish to continue (y/n)? "${NOCOLOR})" yn
+    case $yn in
+        [Yy]* ) dding; break;;
+        [Nn]* ) exit;;
+        * ) echo -e "${YELLOW}Please answer yes or no."${NOCOLOR};;
+    esac
+done
 
 #partitioning
 
