@@ -33,9 +33,8 @@ be carefull not to select your ssd as it would wipe it clean.
 Wait for the instalation to finish, open /mnt and edit your config.plist with ProperTree:  
 https://github.com/corpnewt/ProperTree  
 Fallowing the OpenCore Vanilla guide:  
-https://khronokernel-2.gitbook.io/opencore-vanilla-desktop-guide/amd-config.plist/amd-config
-Tribeam is Fork of macOS-Simple-KVM
-Made by [@FoxletFox](https://twitter.com/foxletfox), and the help of many others. You can donate to him [on Coinbase](https://commerce.coinbase.com/checkout/96dc5777-0abf-437d-a9b5-a78ae2c4c227) or [Paypal!](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QFXXKKAB2B9MA&item_name=macOS-Simple-KVM).
+https://dortania.github.io/OpenCore-Desktop-Guide/  
+Tribeam is Fork of Foxlet macOS-Simple-KVM
 
  Modfied by me to create OpenCore USB-installers on Linux.
 
