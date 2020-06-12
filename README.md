@@ -35,7 +35,7 @@ https://github.com/corpnewt/ProperTree
 You may have to change the python path of ``ProperTree.command``  
 from ``#!/usr/bin/env python``
 to ``#!/usr/bin/env python3`` and install ``python3-tk`` for it to work  
-eg for ubuntu ``sudo apt install python3-tk`` then,  
+eg for ubuntu ``sudo apt install python3-tk`` then run ``./ProperTree.command    
 Fallow the OpenCore Vanilla guide:  
 https://dortania.github.io/OpenCore-Desktop-Guide/  
 Tribeam is Fork of Foxlet macOS-Simple-KVM
