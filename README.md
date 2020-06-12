@@ -32,7 +32,7 @@ be carefull not to select your ssd as it would wipe it clean.
 ## Step 4
 Wait for the instalation to finish, open ``/mnt`` and edit your config.plist with ProperTree:  
 https://github.com/corpnewt/ProperTree  
-You may have to change the python path of ProperTree.command from ``#!/usr/bin/env python``
+You may have to change the python path of ``ProperTree.command`` from ``#!/usr/bin/env python``
 to ``#!/usr/bin/env python3`` and install ``python3-tk`` for it to work
 eg for ubuntu ``sudo apt install python3-tk`` then,  
 Fallow the OpenCore Vanilla guide:  
