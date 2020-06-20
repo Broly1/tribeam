@@ -165,7 +165,7 @@ partformat(){
   echo -e "\e[3mInstallation finished, open /mnt and edit oc for your machine!!\e[0m"
 }
 while true; do
-  read -p "$(echo -e "Driver ${RED}$id${NOCOLOR} will be erased, unzip wget curl will be installed
+  read -p "$(echo -e "Drive ${RED}$id${NOCOLOR} will be erased, unzip wget curl will be installed
 do you wish to continue (y/n)? ")" yn
   case $yn in
     [Yy]* ) dependency; dding; partformat; break;;
