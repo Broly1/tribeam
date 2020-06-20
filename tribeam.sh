@@ -8,10 +8,13 @@ TOOLS=$PWD/tools
 if [[ $EUID -ne 0 ]]; then
   echo -e "${RED}THIS SCRIPT MUST BE EXECUTED AS ROOT${NOCOLOR}"
   exit 1
-
 fi
-
 set -e
+
+cleanup(){
+  rm -rf *.hfs
+  rm -rf tools/FetchMacOS/BaseSystem/
+}
 
 banner() {
   msg="# $* #"
@@ -37,9 +40,9 @@ dependency(){
     fi
   done
   echo -e "\e[3mInstalling dependencies...\e[0m"
-  package="unzip wget curl"
-  package1="unzip wget curl python-pip"
-  package2="unzip wget curl python3-pip"
+  package="p7zip p7zip-plugins wget curl"
+  package1="p7zip wget curl python-pip"
+  package2="p7zip-full wget curl python3-pip"
 
   if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
     ${package_manager} ${package1}
@@ -89,31 +92,9 @@ dependency(){
       ;;
     esac
   done
-  "$TOOLS/dmg2img" "$TOOLS/FetchMacOS/BaseSystem/BaseSystem.dmg" "$PWD/base.iso"
+  7z e -tdmg $TOOLS/FetchMacOS/BaseSystem/BaseSystem.dmg *.hfs
+  mv *.hfs base.hfs
 }
-
-func1 (){
-  if
-  curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
-  | grep -i browser_download_url \
-  | grep RELEASE.zip \
-  | cut -d'"' -f4 \
-  | wget -qi -
-  then
-    unzip *RELEASE.zip -d /mnt/
-  else
-    exit 1
-  fi
-  sleep 5s
-  chmod +x /mnt/
-  rm -rf *RELEASE.zip
-  rm -rf "$PWD/base.iso"
-  rm -rf tools/FetchMacOS/BaseSystem/
-  umount $(echo /dev/$id)2
-  mount -t vfat  $(echo /dev/$id)2 /mnt/ -o rw,umask=000
-  sleep 3s
-}
-
 # Print disk devices
 # Read command output line by line into array ${lines [@]}
 # Bash 3.x: use the following instead:
@@ -131,44 +112,78 @@ done
 # Split the chosen line into ID and serial number.
 read -r id sn unused <<<"$choice"
 
-dding(){
-  echo -e "\e[3mCopying base.iso to usb-drive!\e[0m"
-  if
-  dd bs=8M conv=sparse if="$PWD/base.iso" of=/dev/$id status=progress oflag=sync
-  then
-    umount $(echo /dev/$id?*)  || :; sleep 3s
-  else
-    exit 1
-  fi
-}
-
 partformat(){
-  #partitioning
-
-  sgdisk -e /dev/$id --new=2:0:+300MiB -t 2:ef00
-
-
-  # Format the EFI partition for clover or opencore
-  # and mount it in the /mnt
   if
-  mkfs.fat -F32 -n EFI $(echo /dev/$id)2
+  umount $(echo /dev/$id?*) || :
+  sleep 3s
+  sgdisk --zap-all /dev/$id
+  sgdisk /dev/$id --new=0:0:+300MiB -t 0:ef00
+  partprobe $(echo /dev/$id?*)
   then
-    mount -t vfat  $(echo /dev/$id)2 /mnt/ -o rw,umask=000; sleep 3s
+    sgdisk -e /dev/$id --new=0:0: -t 0:af00
+    partprobe $(echo /dev/$id?*)
+    sleep 3s
+  else
+    exit 1
+  fi
+}
+
+dding(){
+  echo -e "\e[3mCopying macOS img to usb-drive!\e[0m"
+  if
+  dd bs=8M if="$PWD/base.hfs" of=$(echo /dev/$id)2 status=progress oflag=sync
+  then
+    umount $(echo /dev/$id?*) || :
+    sleep 3s
+  else
+    exit 1
+  fi
+}
+
+installoc(){
+  # Format the EFI partition for opencore
+  # and mount it in the /mnt.
+  if
+  mkfs.fat -F32 -n EFI $(echo /dev/$id)1
+  then
+    mount -t vfat  $(echo /dev/$id)1 /mnt/ -o rw,umask=000; sleep 3s
   else
     exit 1
   fi
 
-  # Install opencore
-  echo -e "\e[3mInstalling OpenCore!!\e[0m"
+  # Install opencore.
+  echo -e "Installing OpenCore!!"
   sleep 3s
-  func1
-  echo -e "\e[3mInstallation finished, open /mnt and edit oc for your machine!!\e[0m"
+
+  # OpenCore Downloader fuction.
+
+  if
+  curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
+  | grep -i browser_download_url \
+  | grep RELEASE.zip \
+  | cut -d'"' -f4 \
+  | wget -qi -
+  then
+    7z x *RELEASE.zip -o/mnt/
+  else
+    exit 1
+  fi
+  sleep 5s
+  chmod +x /mnt/
+  rm -rf *RELEASE.zip
+  cleanup
+  umount $(echo /dev/$id)1
+  mount -t vfat  $(echo /dev/$id)1 /mnt/ -o rw,umask=000
+  sleep 3s
+
+  echo -e "Installation finished, open /mnt and edit oc for your machine!!"
 }
+
 while true; do
-  read -p "$(echo -e "Drive ${RED}$id${NOCOLOR} will be erased, unzip wget curl will be installed
+  read -p "$(echo -e "Drive ${RED}$id${NOCOLOR} will be erased, p7zip, wget, curl will be installed
 do you wish to continue (y/n)? ")" yn
   case $yn in
-    [Yy]* ) dependency; dding; partformat; break;;
+    [Yy]* ) cleanup; dependency; partformat > /dev/null 2>&1 || :; dding; installoc; break;;
     [Nn]* ) exit;;
     * ) echo -e "${YELLOW}Please answer yes or no."${NOCOLOR};;
   esac
