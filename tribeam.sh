@@ -36,7 +36,7 @@ dependency(){
       package_manager=${osInfo[$f]}
     fi
   done
-  echo -e "\e[3mInstalling Depencencies...\e[0m"
+  echo -e "\e[3mInstalling dependencies...\e[0m"
   package="unzip wget curl"
   package1="unzip wget curl python-pip"
   package2="unzip wget curl python3-pip"
