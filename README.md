@@ -10,13 +10,7 @@ Plug in your USB-drive 4GB or more.
 
 ## Step 2
 Run `tribeam.sh` to download installation media for macOS (internet required). 
-Select the macOS version desired:
-```
-1) macOS_Catalina
-2) macOS_Mojave
-2) macOS_High_Sierra
-#)?
-```
+Select the macOS version desired:  
 
 ## Step 3
 Select the USB-drive whenever the script asks, it will show a menu with all drives For example:
@@ -37,10 +31,9 @@ from ``#!/usr/bin/env python``
 to ``#!/usr/bin/env python3`` and install ``python3-tk`` for it to work  
 eg for ubuntu ``sudo apt install python3-tk`` then run ``./ProperTree.command    
 Fallow the OpenCore Vanilla guide:  
-https://dortania.github.io/OpenCore-Desktop-Guide/  
-Tribeam is Fork of Foxlet macOS-Simple-KVM
+https://dortania.github.io/OpenCore-Desktop-Guide/    
 
- Modfied by me to create OpenCore USB-installers on Linux.
+## Credits to: IgorBressan for  <a href="https://github.com/IgorBressan/macOSDownloader" target="_top">macOSDownloader</a>
 
 
 
