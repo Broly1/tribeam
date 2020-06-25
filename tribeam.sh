@@ -126,17 +126,14 @@ getListOfVersions(){
 
 
 checkOSAvaibility() {
-	if curl --output /dev/null --silent --head --fail "https://swscan.apple.com/content/catalogs/others/index-$1seed-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"; then echo "$1"; else echo "10.14"; fi
+	if curl --output /dev/null --silent --head --fail "https://swscan.apple.com/content/catalogs/others/index-$1seed-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"; then echo "$1"; else echo "10.15"; fi
 }
-
-
-
 
 
 downloadOS(){
 	# Print User Interface
 	banner
-	LATEST_VERSION=$(checkOSAvaibility "10.15")
+	LATEST_VERSION=$(checkOSAvaibility "10.16")
 
 	# User input for selecting release type
 	echo -e "Which release you want?"
@@ -149,9 +146,9 @@ downloadOS(){
 	done
 
 
-	downloadAndParseCatalog "https://swscan.apple.com/content/catalogs/others/index${CATALOGTYPE}-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
+	downloadAndParseCatalog "https://swscan.apple.com/content/catalogs/others/index${CATALOGTYPE}-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
-
+                            
 	banner
 	# User input for selecting macOS versions
 	echo -e  "Select macOS version : "
