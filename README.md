@@ -32,7 +32,7 @@ from ``#!/usr/bin/env python``
 to ``#!/usr/bin/env python3`` and install ``python3-tk`` for it to work  
 eg for ubuntu ``sudo apt install python3-tk`` then,  
 Fallow the OpenCore Vanilla guide:  
-https://dortania.github.io/OpenCore-Desktop-Guide/  
-Tribeam is Fork of Foxlet macOS-Simple-KVM
+https://dortania.github.io/OpenCore-Desktop-Guide/    
+***Credits to: IgorBressan for  <a href="https://github.com/IgorBressan/macOSDownloader" target="_top">macOSDownloader</a>***
 
- Modfied by me to create OpenCore USB-installers on Linux.
+
