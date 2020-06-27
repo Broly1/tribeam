@@ -126,7 +126,7 @@ getListOfVersions(){
 
 
 checkOSAvaibility() {
-	if curl --output /dev/null --silent --head --fail "https://swscan.apple.com/content/catalogs/others/index-$1seed-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"; then echo "$1"; else echo "10.15"; fi
+	if curl --output /dev/null --silent --head --fail "https://swscan.apple.com/content/catalogs/others/index-10.16$1seed-10.16-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"; then echo "$1"; else echo "10.15"; fi
 }
 
 
