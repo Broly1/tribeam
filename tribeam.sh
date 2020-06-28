@@ -161,7 +161,7 @@ select MACVERSION in "${versionsArray[@]}"; do
 		fileNames=("BaseSystem.dmg")
 
 		# Ask user to download macOS or only print links
-		while true; do read -p "would you like to proceed to download? [y/n] " yn
+		while true; do read -p "would you like to proceed to download [y/n] ? " yn
 			echo -e ""
 			if [[ $yn == y ]]; then
 
@@ -214,20 +214,21 @@ read -r id sn unused <<<"$choice"
 }
 
 partformat(){
+	while true; do read -p "Disk $id will be erased do you wish to continue [y/n] ? " yn
+		echo -e ""
+		if [[ $yn == y ]]; then
+			umount $(echo /dev/$id?*) || :
+			sleep 2s
+			sgdisk --zap-all /dev/$id && partprobe
+			sgdisk /dev/$id --new=0:0:+300MiB -t 0:ef00 && partprobe
+			sgdisk -e /dev/$id --new=0:0: -t 0:af00 && partprobe
+			sleep 2s
+			break;
 
-	if
-		umount $(echo /dev/$id?*) || :
-		sleep 3s
-		sgdisk --zap-all /dev/$id
-		sgdisk /dev/$id --new=0:0:+300MiB -t 0:ef00
-		partprobe $(echo /dev/$id?*)
-	then
-		sgdisk -e /dev/$id --new=0:0: -t 0:af00
-		partprobe $(echo /dev/$id?*)
-		sleep 3s
-	else
-		exit 1
-	fi
+		elif [[ $yn == n ]]; then
+			echo -e "Goodbye!!"; exit 1
+		fi
+	done
 }
 
 dding(){
@@ -262,8 +263,7 @@ sleep 3s
 # OpenCore Downloader fuction.
 banner
 if
-	cd ${BaseDir}
-	curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
+	cd ${BaseDir}; curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
 		| grep -i browser_download_url \
 		| grep RELEASE.zip \
 		| cut -d'"' -f4 \
@@ -289,7 +289,7 @@ banner
 while true; do
 	read -p "$(echo -e "This script will install wget p7zip and curl do you wish to continue [y/n]? ")" yn
 	case $yn in
-		[Yy]* ) cleanup; ImportantTools > /dev/null 2>&1 || :; downloadOS; extract; selectusb; echo -e "Formating drive $id..."; partformat > /dev/null 2>&1 || :; dding; installoc; cleanup; break;;
+		[Yy]* ) cleanup; ImportantTools > /dev/null 2>&1 || :; downloadOS; extract; selectusb; partformat; dding; installoc; cleanup; break;;
 		[Nn]* ) exit;;
 		* ) echo -e "Please answer yes or no.";;
 	esac
