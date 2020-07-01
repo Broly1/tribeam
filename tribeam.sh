@@ -41,7 +41,7 @@ ImportantTools(){
 	osInfo[/etc/alpine-release]="apk --update add"
 	osInfo[/etc/centos-release]="yum install -y"
 	osInfo[/etc/fedora-release]="dnf install -y"
-	osInfo[/etc/arch-release]="pacman -S --noconfirm"
+	osInfo[/etc/arch-release]="pacman -Sy --noconfirm"
 
 	for f in ${!osInfo[@]}
 	do
@@ -53,8 +53,8 @@ ImportantTools(){
 	package1="wget curl p7zip"
 	package2="wget curl p7zip-full"
 
-	if [ "${package_manager}" = "pacman -S --noconfirm" ]; then
-		${package_manager} ${package1}
+	if [ "${package_manager}" = "pacman -Sy --noconfirm" ]; then
+		${package_manager} --needed ${package1}
 
 	elif [ "${package_manager}" = "apt install -y" ]; then
 		${package_manager} ${package2}
