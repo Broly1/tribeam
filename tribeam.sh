@@ -289,7 +289,7 @@ banner
 while true; do
 	read -p "$(echo -e "This script will install wget p7zip and curl do you wish to continue [y/n]? ")" yn
 	case $yn in
-		[Yy]* ) cleanup; ImportantTools > /dev/null 2>&1 || :; downloadOS; extract; selectusb; partformat; dding; installoc; cleanup; break;;
+		[Yy]* ) cleanup; ImportantTools; downloadOS; extract; selectusb; partformat; dding; installoc; cleanup; break;;
 		[Nn]* ) exit;;
 		* ) echo -e "Please answer yes or no.";;
 	esac
