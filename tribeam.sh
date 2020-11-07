@@ -49,7 +49,7 @@ ImportantTools(){
 			package_manager=${osInfo[$f]}
 		fi
 	done
-	package="wget curl p7zip"
+	package="wget curl p7zip-plugins"
 	package1="wget curl p7zip"
 	package2="wget curl p7zip-full"
 
