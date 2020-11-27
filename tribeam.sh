@@ -199,7 +199,7 @@ extract(){
 selectusb(){
 	banner
 
-	readarray -t lines < <(lsblk --nodeps -no name,size | grep "sd")
+	readarray -t lines < <(lsblk -d -no name,size,MODEL,VENDOR,TRAN | grep "sd")
 
 # Prompt the user to select one of the lines.
 echo -e "${RED}WARNING!!! SELECTING THE WRONG DISK MAY WIPE YOUR PC AND ALL DATA!!!${NOCOLOR}"
