@@ -9,12 +9,7 @@ RED="\033[1;31m\e[3m"
 YELLOW="\033[01;33m\e[3m"
 NOCOLOR="\e[0m\033[0m"
 
-
-# Checking for root Identifying distro pkg-manager and installing dependencies.
-if [[ $EUID -ne 0 ]]; then
-	echo -e "${RED}This script must be executed as root!${NOCOLOR}"
-	exit 1
-fi
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@" ]
 
 # Global functions
 print() { echo -e   -- "$1\n"; }
