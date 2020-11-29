@@ -194,16 +194,17 @@ extract(){
 selectusb(){
 	banner
 
+
+readarray -t lines < <(lsblk -p -no name,size,MODEL,VENDOR,TRAN | grep "usb")
 echo -e "${RED}WARNING: THE SELECTED DRIVE WILL BE ERASED!!!${NOCOLOR}"
 echo -e "Please select the usb-drive."
-readarray -t lines < <(lsblk -d -no name,size,MODEL,VENDOR,TRAN | grep "usb")
 select choice in "${lines[@]}"; do
 	[[ -n $choice ]] || { echo -e "${RED}>>> Invalid Selection!${NOCOLOR}" >&2; continue; }
 	break 
 done
 read -r id sn unused <<<"$choice"
 if [ -z "$choice" ]; then
-	echo -e Please insert the USB drive and try again
+	echo -e "Please insert the USB drive and try again."
 	exit 1
 fi
 }
@@ -212,11 +213,11 @@ partformat(){
 	while true; do read -p "Disk $id will be erased do you wish to continue [y/n] ? " yn
 		echo -e ""
 		if [[ $yn == y ]]; then
-			umount $(echo /dev/$id?*) || :
+			umount $(echo $id?*) || :
 			sleep 2s
-			sgdisk --zap-all /dev/$id && partprobe
-			sgdisk /dev/$id --new=0:0:+300MiB -t 0:ef00 && partprobe
-			sgdisk /dev/$id --new=0:0: -t 0:af00 && partprobe
+			sgdisk --zap-all $id && partprobe
+			sgdisk $id --new=0:0:+300MiB -t 0:ef00 && partprobe
+			sgdisk $id --new=0:0: -t 0:af00 && partprobe
 			sleep 2s
 			break;
 
@@ -230,9 +231,9 @@ dding(){
 	banner
 	echo -e "Copying macOS img to drive $id!"
 	if
-		dd bs=8M if="$BaseDir/base.hfs" of=$(echo /dev/$id)2 status=progress oflag=sync
+		dd bs=8M if="$BaseDir/base.hfs" of=$(echo $id)2 status=progress oflag=sync
 	then
-		umount $(echo /dev/$id?*) || :
+		umount $(echo $id?*) || :
 		sleep 3s
 	else
 		exit 1
@@ -244,9 +245,9 @@ installoc(){
 	# Format the EFI partition for opencore
 	# and mount it in the /mnt.
 	if
-		mkfs.fat -F32 -n EFI $(echo /dev/$id)1
+		mkfs.fat -F32 -n EFI $(echo $id)1
 	then
-		mount -t vfat  $(echo /dev/$id)1 /mnt/ -o rw,umask=000; sleep 3s
+		mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000; sleep 3s
 	else
 		exit 1
 	fi
@@ -272,8 +273,8 @@ if
 fi
 sleep 3s
 chmod +x /mnt/
-umount $(echo /dev/$id)1
-mount -t vfat  $(echo /dev/$id)1 /mnt/ -o rw,umask=000
+umount $(echo $id)1
+mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000
 cd ..
 sleep 3s
 
