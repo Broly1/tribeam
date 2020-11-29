@@ -216,7 +216,7 @@ partformat(){
 			sleep 2s
 			sgdisk --zap-all /dev/$id && partprobe
 			sgdisk /dev/$id --new=0:0:+300MiB -t 0:ef00 && partprobe
-			sgdisk -e /dev/$id --new=0:0: -t 0:af00 && partprobe
+			sgdisk /dev/$id --new=0:0: -t 0:af00 && partprobe
 			sleep 2s
 			break;
 
