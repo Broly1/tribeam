@@ -11,23 +11,11 @@ NOCOLOR="\e[0m\033[0m"
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@" ]
 
-# Global functions
-print() { echo -e   -- "$1\n"; }
-log() { echo -e   -- "\033[37m LOG: $1 \033[0m\n"; }
-success() { echo -e   -- "\033[32m SUCCESS: $1 \033[0m\n"; }
-warning() { echo -e   -- "\033[33m WARNING: $1 \033[0m\n"; }
-error() { echo -e   -- "\033[31m ERROR: $1 \033[0m\n"; }
-heading() { echo -e   -- "   \033[1;30;42m $1 \033[0m\n\n"; }
-banner() {
-	clear
-	echo "  ############################ "
-	echo " #    WELCOME TO TRIBEAM    # "
-	echo "############################ "
-	echo " "
-	echo " "
-}
-
-
+clear
+echo "  ############################ "
+echo " #    WELCOME TO TRIBEAM    # "
+echo "############################ "
+echo " "
 ImportantTools(){
 	sleep 3s
 
@@ -127,29 +115,30 @@ checkOSAvaibility() {
 
 downloadOS(){
 	# Print User Interface
-	banner
+
 	LATEST_VERSION=$(checkOSAvaibility "10.16")
 
-# User input for selecting release type
-echo -e "Which release you want?"
-select RELEASETYPE in "Developer Release" "Beta Release" "Public Release"; do
-	case $RELEASETYPE in
-		Developer* ) CATALOGTYPE="-${LATEST_VERSION}seed"; break;;
-		Beta* ) CATALOGTYPE="-${LATEST_VERSION}beta"; break;;
-		Public* ) break;;
-	esac
-done
-
-
-downloadAndParseCatalog "https://swscan.apple.com/content/catalogs/others/index${CATALOGTYPE}-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
-
-
-banner
-# User input for selecting macOS versions
-echo -e  "Select macOS version : "
-select MACVERSION in "${versionsArray[@]}"; do
-	if [[ $REPLY -le ${#versionsArray[@]} && $REPLY -gt 0 ]]
-	then
+	clear
+	echo "  ############################ "
+	echo " #   SELECT MACOS VERSION   # "
+	echo "############################ "
+	echo " "
+	select RELEASETYPE in "Developer Release" "Beta Release" "Public Release"; do
+		case $RELEASETYPE in
+			Developer* ) CATALOGTYPE="-${LATEST_VERSION}seed"; break;;
+			Beta* ) CATALOGTYPE="-${LATEST_VERSION}beta"; break;;
+			Public* ) break;;
+		esac
+	done
+	downloadAndParseCatalog "https://swscan.apple.com/content/catalogs/others/index${CATALOGTYPE}-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
+	clear
+	echo "  ############################ "
+	echo " #   SELECT MACOS VERSION   # "
+	echo "############################ "
+	echo " "
+	select MACVERSION in "${versionsArray[@]}"; do
+		if [[ $REPLY -le ${#versionsArray[@]} && $REPLY -gt 0 ]]
+		then
 
 		# Dont break sequence (It's sequenced with $fileNames[@])
 		links=(${baseSystemArray[$[$REPLY - 1]]})
@@ -175,41 +164,49 @@ select MACVERSION in "${versionsArray[@]}"; do
 
 		break
 	else error "Invalid choice."
-	fi
-done
+		fi
+	done
 }
 
-banner
+
 
 extract(){
-	if
-		7z e -tdmg $BaseDir BaseSystem.dmg -bsp0 -bso0 -o/$BaseDir *.hfs
-	then
-		mv $BaseDir/"4.hfs" $BaseDir/"base.hfs"
-	else
+
+	clear
+	echo "  ############################ "
+	echo " #    EXTRACTING THE DMG    # "
+	echo "############################ "
+	7z e -tdmg $BaseDir BaseSystem.dmg -o/$BaseDir *.hfs
+	mv $BaseDir/*.hfs $BaseDir/"base.hfs"
+}
+
+selectusb(){
+
+	clear
+	echo   "  ################################################ "
+	echo   " #  WARNING: THE SELECTED DRIVE WILL BE ERASED! # "
+	echo   "################################################ "
+	echo " "
+	readarray -t lines < <(lsblk -p -no name,size,MODEL,VENDOR,TRAN | grep "usb")
+	echo -e "Please select the usb-drive."
+	select choice in "${lines[@]}"; do
+		[[ -n $choice ]] || { echo -e "${RED}>>> Invalid Selection!${NOCOLOR}" >&2; continue; }
+		break 
+	done
+	read -r id sn unused <<<"$choice"
+	if [ -z "$choice" ]; then
+		echo -e "Please insert the USB drive and try again."
 		exit 1
 	fi
 }
 
-selectusb(){
-	banner
-
-
-readarray -t lines < <(lsblk -p -no name,size,MODEL,VENDOR,TRAN | grep "usb")
-echo -e "${RED}WARNING: THE SELECTED DRIVE WILL BE ERASED!!!${NOCOLOR}"
-echo -e "Please select the usb-drive."
-select choice in "${lines[@]}"; do
-	[[ -n $choice ]] || { echo -e "${RED}>>> Invalid Selection!${NOCOLOR}" >&2; continue; }
-	break 
-done
-read -r id sn unused <<<"$choice"
-if [ -z "$choice" ]; then
-	echo -e "Please insert the USB drive and try again."
-	exit 1
-fi
-}
-
 partformat(){
+
+	clear
+	echo "  ################################ "
+	echo " #  PARTITIONING AND FORMATING  # "
+	echo "################################ "
+	echo " "
 	while true; do read -p "Disk $id will be erased do you wish to continue [y/n] ? " yn
 		echo -e ""
 		if [[ $yn == y ]]; then
@@ -220,7 +217,6 @@ partformat(){
 			sgdisk $id --new=0:0: -t 0:af00 && partprobe
 			sleep 2s
 			break;
-
 		elif [[ $yn == n ]]; then
 			echo -e "Goodbye!!"; exit 1
 		fi
@@ -228,60 +224,46 @@ partformat(){
 }
 
 dding(){
-	banner
-	echo -e "Copying macOS img to drive $id!"
-	if
-		dd bs=8M if="$BaseDir/base.hfs" of=$(echo $id)2 status=progress oflag=sync
-	then
-		umount $(echo $id?*) || :
-		sleep 3s
-	else
-		exit 1
-		fi
-	}
+
+	clear
+	echo "  ################################"
+	echo " #  COPYING MACOS IMG TO DRIVE  # "
+	echo "################################"
+	echo " "
+	dd bs=8M if="$BaseDir/base.hfs" of=$(echo $id)2 status=progress oflag=sync
+	umount $(echo $id?*) || :
+	sleep 3s
+}
 
 installoc(){
-	banner
-	# Format the EFI partition for opencore
-	# and mount it in the /mnt.
-	if
-		mkfs.fat -F32 -n EFI $(echo $id)1
-	then
-		mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000; sleep 3s
-	else
-		exit 1
-	fi
 
-# Install opencore.
-echo -e "Installing OpenCore!!"
-sleep 3s
+	clear
+	echo "  #########################"
+	echo " #  INSTALLING OPENCORE  # "
+	echo "#########################"
+	echo " "
+	mkfs.fat -F32 -n EFI $(echo $id)1
+	mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000; sleep 3s
+	sleep 3s
 
-# OpenCore Downloader fuction.
-banner
-if
 	cd ${BaseDir}; curl "https://api.github.com/repos/acidanthera/OpenCorePkg/releases/latest" \
 		| grep -i browser_download_url \
 		| grep RELEASE.zip \
 		| cut -d'"' -f4 \
 		| wget -qi -
-		then
-			banner
-			sleep 3s
-			7z x *RELEASE.zip -bsp0 -bso0 X64 Docs Utilities -o/mnt/ && mv /mnt/X64/EFI /mnt/EFI && rmdir /mnt/X64
-		else
-			exit 1
-fi
-sleep 3s
-chmod +x /mnt/
-umount $(echo $id)1
-mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000
-cd ..
-sleep 3s
 
-echo -e "Installation finished, open /mnt/ and edit oc for your machine!!"
+	sleep 3s
+	7z x *RELEASE.zip -bsp0 -bso0 X64 Docs Utilities -o/mnt/ && mv /mnt/X64/EFI /mnt/EFI && rmdir /mnt/X64
+	sleep 3s
+	chmod +x /mnt/
+	umount $(echo $id)1
+	mount -t vfat  $(echo $id)1 /mnt/ -o rw,umask=000
+	cd ..
+	sleep 3s
+	echo -e "Installation finished, open /mnt/ and edit oc for your machine!!"
 }
 
-banner
+
 while true; do
 	read -p "$(echo -e "This script will install wget p7zip and curl do you wish to continue [y/n]? ")" yn
 	case $yn in
