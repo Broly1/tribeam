@@ -9,7 +9,7 @@ RED="\033[1;31m\e[3m"
 YELLOW="\033[01;33m\e[3m"
 NOCOLOR="\e[0m\033[0m"
 
-[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@" ]
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@" 
 
 clear
 echo "  ############################ "
